@@ -5,10 +5,12 @@
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
 #include "hardware/timer.h"
+#include "hardware/adc.h"
 #include "../inc/ssd1306.h"
 
 void cancel_timer();
 void setup_repeating_timer();
+void setup_repeating_timer_joystick();
 void change_screen_state(uint state);
 
 struct render_area frame_area = {
@@ -26,9 +28,9 @@ volatile uint8_t ciclos = 3;
 
 char texto[8][17];
 
-volatile uint8_t tempo_foco;
-volatile uint8_t tempo_descanso;
-volatile uint8_t ciclos_restante;
+volatile uint16_t tempo_foco;
+volatile uint16_t tempo_descanso;
+volatile uint16_t ciclos_restante;
 
 struct repeating_timer timer;
 volatile bool cancelled = true;
@@ -92,7 +94,7 @@ void get_screen_text() {
 
         if (ciclos_restante > 0) ciclos_restante--;
         else {
-            printf("Reset\n");
+            //printf("Reset\n");
             change_screen_state(0);
             return;
         }
@@ -138,6 +140,15 @@ void get_screen_text() {
         }
         setup_repeating_timer();
     } else if (estado == 3) {
+        if (!cancelled) {
+            //printf("Joystick\n");
+            cancel_timer();
+            setup_repeating_timer_joystick();
+        } else {
+            //printf("Joystick\n");
+            setup_repeating_timer_joystick();
+        }
+        
         char text[8][17] = {
             "Configuracao    ",
             "                ",
@@ -155,6 +166,15 @@ void get_screen_text() {
             strcpy(texto[i], text[i]);
         }
     } else if (estado == 4) {
+        if (!cancelled) {
+            //printf("Joystick\n");
+            cancel_timer();
+            setup_repeating_timer_joystick();
+        } else {
+            //printf("Joystick\n");
+            setup_repeating_timer_joystick();
+        }
+
         char text[8][17] = {
             "Configuracao    ",
             "                ",
@@ -172,6 +192,15 @@ void get_screen_text() {
             strcpy(texto[i], text[i]);
         }
     } else if (estado == 5) {
+        if (!cancelled) {
+            //printf("Joystick\n");
+            cancel_timer();
+            setup_repeating_timer_joystick();
+        } else {
+            //printf("Joystick\n");
+            setup_repeating_timer_joystick();
+        }
+
         char text[8][17] = {
             "Configuracao    ",
             "                ",
@@ -215,7 +244,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
 
             draw_screen(text);
             
-            printf("Tempo restante %u\n", tempo_foco);
+            //printf("Tempo restante %u\n", tempo_foco);
             return true;
         } else {
             change_screen_state(2);
@@ -235,13 +264,109 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
 
             draw_screen(text);
 
-            printf("Tempo restante %u\n", tempo_descanso);
+            //printf("Tempo restante %u\n", tempo_descanso);
             return true;
         } else {
             change_screen_state(1);
             return false;
         }
     }
+}
+
+bool repeating_timer_callback_joystick(__unused struct repeating_timer *t) {
+    uint16_t joystick = adc_read();
+    printf("Joystick %u\n", joystick);
+
+    if (estado == 3) {
+        printf("Foco %u\n", foco);
+        if (joystick > 4000 && foco < 60) {
+            foco++;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u minutos      ", foco);
+
+            draw_screen(text);
+        }
+        else if (joystick < 25 && foco > 1) {
+            foco--;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u minutos      ", foco);
+
+            draw_screen(text);
+        }
+    }
+    
+    if (estado == 4) {
+        printf("Descanso %u\n", descanso);
+        if (joystick > 4000 && descanso < 60) {
+            descanso++;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u minutos      ", descanso);
+
+            draw_screen(text);
+        }
+        else if (joystick < 25 && descanso > 1) {
+            descanso--;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u minutos      ", descanso);
+
+            draw_screen(text);
+        }
+    }
+
+    if (estado == 5) {
+        printf("Ciclos %u\n", ciclos);
+        if (joystick > 4000) {
+            ciclos++;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u ciclos       ", ciclos);
+
+            draw_screen(text);
+        }
+        else if (joystick < 25 && ciclos > 1) {
+            ciclos--;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "% 2u ciclos       ", ciclos);
+
+            draw_screen(text);
+        }
+    }
+
+    return true;
+}
+
+void setup_repeating_timer_joystick() {
+    cancelled = false; 
+    add_repeating_timer_ms(200, repeating_timer_callback_joystick, NULL, &timer);
 }
 
 void setup_repeating_timer() {

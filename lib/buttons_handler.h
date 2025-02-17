@@ -3,32 +3,41 @@
 volatile bool ba_state = false;
 volatile bool bb_state = false;
 
+volatile absolute_time_t last_press_time_a = 0;
+volatile absolute_time_t last_press_time_b = 0;
+
 void buttons_callback(uint gpio, uint32_t events) {
     if (gpio == 5) {
-        gpio_put(LED_RED, false);
-        if (estado == 0) change_screen_state(1);
-        else if (estado == 1) change_screen_state(0);
-        else if (estado == 2) change_screen_state(0);
-        else if (estado == 3) change_screen_state(0);
-        else if (estado == 4) change_screen_state(3);
-        else if (estado == 5) change_screen_state(4);
+        if (absolute_time_diff_us(last_press_time_a, get_absolute_time()) > 200000) {
+            last_press_time_a = get_absolute_time();
+            gpio_put(LED_RED, false);
+            if (estado == 0) change_screen_state(1);
+            else if (estado == 1) change_screen_state(0);
+            else if (estado == 2) change_screen_state(0);
+            else if (estado == 3) change_screen_state(0);
+            else if (estado == 4) change_screen_state(3);
+            else if (estado == 5) change_screen_state(4);
+        }
     } else if (gpio == 6) {
-        gpio_put(LED_RED, true);
-        if (estado == 0) change_screen_state(3);
-        else if (estado == 1) {
-            printf("B\n");
-            if (cancelled) setup_repeating_timer();
-            else cancel_timer();
-            
+        if (absolute_time_diff_us(last_press_time_b, get_absolute_time()) > 200000) {
+            last_press_time_b = get_absolute_time();
+            gpio_put(LED_RED, true);
+            if (estado == 0) change_screen_state(3);
+            else if (estado == 1) {
+                printf("B\n");
+                if (cancelled) setup_repeating_timer();
+                else cancel_timer();
+                
+            }
+            else if (estado == 2) {
+                printf("B\n");
+                if (cancelled) setup_repeating_timer();
+                else cancel_timer();
+            }
+            else if (estado == 3) change_screen_state(4);
+            else if (estado == 4) change_screen_state(5);
+            else if (estado == 5) change_screen_state(0);
         }
-        else if (estado == 2) {
-            printf("B\n");
-            if (cancelled) setup_repeating_timer();
-            else cancel_timer();
-        }
-        else if (estado == 3) change_screen_state(4);
-        else if (estado == 4) change_screen_state(5);
-        else if (estado == 5) change_screen_state(0);
     }
 }
 
