@@ -4,7 +4,12 @@
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
+#include "hardware/timer.h"
 #include "../inc/ssd1306.h"
+
+void cancel_timer();
+void setup_repeating_timer();
+void change_screen_state(uint state);
 
 struct render_area frame_area = {
     start_column : 0,
@@ -18,6 +23,15 @@ volatile uint8_t estado = 0;
 volatile uint8_t foco = 25;
 volatile uint8_t descanso = 5;
 volatile uint8_t ciclos = 3;
+
+char texto[8][17];
+
+volatile uint8_t tempo_foco;
+volatile uint8_t tempo_descanso;
+volatile uint8_t ciclos_restante;
+
+struct repeating_timer timer;
+volatile bool cancelled = true;
 
 void setup_display_oled() {
     calculate_render_area_buffer_length(&frame_area);
@@ -35,7 +49,7 @@ void setup_display_oled() {
     render_on_display(ssd, &frame_area);
 }
 
-void draw_screen(uint8_t *ssd, char text[8][17]) {
+void draw_screen(char text[8][17]) {
     memset(ssd, 0, ssd1306_buffer_length);
     int y = 0;
 
@@ -47,8 +61,13 @@ void draw_screen(uint8_t *ssd, char text[8][17]) {
     render_on_display(ssd, &frame_area);
 }
 
-void get_screen_text(char texto[8][17]) {
+void get_screen_text() {
     if (estado == 0) {
+        if (!cancelled) {
+            cancel_timer();
+        } 
+
+        ciclos_restante = ciclos;
         char text[8][17] = {
             "A Comecar       ",
             "B Configurar    ",
@@ -64,7 +83,20 @@ void get_screen_text(char texto[8][17]) {
         for (int i = 0; i < 8; i++) {
             strcpy(texto[i], text[i]);
         }
+
+        ciclos_restante = ciclos;
     } else if (estado == 1) {
+        if (!cancelled) {
+            cancel_timer();
+        } 
+
+        if (ciclos_restante > 0) ciclos_restante--;
+        else {
+            printf("Reset\n");
+            change_screen_state(0);
+            return;
+        }
+        tempo_foco = foco;
         char text[8][17] = {
             "Foco            ",
             "                ",
@@ -81,7 +113,13 @@ void get_screen_text(char texto[8][17]) {
         for (int i = 0; i < 8; i++) {
             strcpy(texto[i], text[i]);
         }
+
+        setup_repeating_timer();
     } else if (estado == 2) {
+        if (!cancelled) {
+            cancel_timer();
+        } 
+        tempo_descanso = descanso;
         char text[8][17] = {
             "Descanso        ",
             "                ",
@@ -98,6 +136,7 @@ void get_screen_text(char texto[8][17]) {
         for (int i = 0; i < 8; i++) {
             strcpy(texto[i], text[i]);
         }
+        setup_repeating_timer();
     } else if (estado == 3) {
         char text[8][17] = {
             "Configuracao    ",
@@ -154,11 +193,63 @@ void get_screen_text(char texto[8][17]) {
 
 void change_screen_state(uint state) {
     estado = state;
-    char text[8][17];
     
-    get_screen_text(text);
+    get_screen_text();
 
-    if (text != NULL) {
-        draw_screen(ssd, text);
+    if (texto != NULL) {
+        draw_screen(texto);
     }
+}
+
+bool repeating_timer_callback(__unused struct repeating_timer *t) {
+    if (estado == 1) {
+        if (tempo_foco > 0) {
+            tempo_foco--;
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "  % 2u minutos    ", tempo_foco);
+
+            draw_screen(text);
+            
+            printf("Tempo restante %u\n", tempo_foco);
+            return true;
+        } else {
+            change_screen_state(2);
+            return false;
+        }
+    } else if (estado == 2) {
+        if (tempo_descanso > 0) {
+            tempo_descanso--;
+
+            char text[8][17];
+
+            for (int i = 0; i < 8; i++) {
+                strcpy(text[i], texto[i]);
+            }
+
+            snprintf(text[3], 17, "  % 2u minutos    ", tempo_descanso);
+
+            draw_screen(text);
+
+            printf("Tempo restante %u\n", tempo_descanso);
+            return true;
+        } else {
+            change_screen_state(1);
+            return false;
+        }
+    }
+}
+
+void setup_repeating_timer() {
+    cancelled = false; 
+    add_repeating_timer_ms(1000, repeating_timer_callback, NULL, &timer);
+}
+
+void cancel_timer() {
+    cancelled = true;
+    cancel_repeating_timer(&timer);
 }
