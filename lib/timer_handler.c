@@ -3,6 +3,7 @@
 #include "hardware/adc.h"
 #include "timer_handler.h"
 #include "screen_handler.h"
+#include "buzzer_handler.h"
 
 struct repeating_timer timer;
 volatile bool cancelled = true;
@@ -29,6 +30,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
             return true;
         } else {
             change_screen_state(2);
+            play_beep();
             return false;
         }
     } else if (estado == 2) {
@@ -49,6 +51,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
             return true;
         } else {
             change_screen_state(1);
+            play_beep();
             return false;
         }
     }
@@ -56,10 +59,10 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
 
 bool repeating_timer_callback_joystick(__unused struct repeating_timer *t) {
     uint16_t joystick = adc_read();
-    printf("Joystick %u\n", joystick);
+    //printf("Joystick %u\n", joystick);
 
     if (estado == 3) {
-        printf("Foco %u\n", foco);
+        // printf("Foco %u\n", foco);
         if (joystick > 4000 && foco < 60) {
             foco++;
             char text[8][17];
@@ -87,7 +90,7 @@ bool repeating_timer_callback_joystick(__unused struct repeating_timer *t) {
     }
     
     if (estado == 4) {
-        printf("Descanso %u\n", descanso);
+        //printf("Descanso %u\n", descanso);
         if (joystick > 4000 && descanso < 60) {
             descanso++;
             char text[8][17];
@@ -115,7 +118,7 @@ bool repeating_timer_callback_joystick(__unused struct repeating_timer *t) {
     }
 
     if (estado == 5) {
-        printf("Ciclos %u\n", ciclos);
+        //printf("Ciclos %u\n", ciclos);
         if (joystick > 4000) {
             ciclos++;
             char text[8][17];

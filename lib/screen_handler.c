@@ -5,6 +5,7 @@
 #include "screen_handler.h"
 #include "led_handler.h"
 #include "timer_handler.h"
+#include "memory_handler.h"
 
 const uint I2C_SDA = 14;
 const uint I2C_SCL = 15;
@@ -13,6 +14,7 @@ volatile uint8_t estado = 0;
 volatile uint8_t foco = 25;
 volatile uint8_t descanso = 5;
 volatile uint8_t ciclos = 3;
+bool inicializado = true;
 
 struct render_area frame_area = {
     start_column : 0,
@@ -56,7 +58,12 @@ void get_screen_text() {
     if (estado == 0) {
         if (!cancelled) {
             cancel_timer();
-        } 
+        }
+        if (inicializado) {
+            inicializado = false;
+        } else {
+            store_values(foco, descanso, ciclos);
+        }
 
         turn_off();
 

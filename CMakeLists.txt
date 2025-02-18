@@ -41,7 +41,9 @@ add_executable(pomodoro pomodoro.c
         lib/joystick_handler.c
         lib/led_handler.c
         lib/screen_handler.c
-        lib/timer_handler.c)
+        lib/timer_handler.c
+        lib/buzzer_handler.c
+        lib/memory_handler.c)
 
 pico_set_program_name(pomodoro "pomodoro")
 pico_set_program_version(pomodoro "0.1")
@@ -54,9 +56,13 @@ pico_enable_stdio_usb(pomodoro 1)
 target_link_libraries(pomodoro
         pico_stdlib
         hardware_timer
+        hardware_clocks
+        hardware_pwm
         hardware_adc
         hardware_i2c
-        hardware_gpio)
+        hardware_gpio
+        hardware_flash
+        hardware_sync)
 
 # Add the standard include files to the build
 target_include_directories(pomodoro PRIVATE
