@@ -1,10 +1,6 @@
-#include "hardware/adc.h"
-#include "pico/stdlib.h"
+#ifndef JOYSTICK_HANDLER_H
+#define JOYSTICK_HANDLER_H
 
-const int ADC_CHANNEL_0 = 0;
+extern void setup_joystick();
 
-void setup_joystick() {
-  adc_init(); 
-  adc_gpio_init(JOY_X); 
-  adc_select_input(ADC_CHANNEL_0);
-}
+#endif
