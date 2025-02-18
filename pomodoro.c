@@ -4,6 +4,7 @@
 #include "lib/led_handler.h"
 #include "lib/buzzer_handler.h"
 #include "lib/memory_handler.h"
+#include "lib/led_matrix_handler.h"
 
 int main()
 {
@@ -14,6 +15,7 @@ int main()
     setup_joystick();
     setup_leds();
     setup_buzzer();
+    setup_led_matrix();
 
     change_screen_state(estado);
 

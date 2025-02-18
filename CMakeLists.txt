@@ -43,7 +43,10 @@ add_executable(pomodoro pomodoro.c
         lib/screen_handler.c
         lib/timer_handler.c
         lib/buzzer_handler.c
-        lib/memory_handler.c)
+        lib/memory_handler.c
+        lib/led_matrix_handler.c)
+
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/lib/ws2818b.pio)
 
 pico_set_program_name(pomodoro "pomodoro")
 pico_set_program_version(pomodoro "0.1")
@@ -62,7 +65,8 @@ target_link_libraries(pomodoro
         hardware_i2c
         hardware_gpio
         hardware_flash
-        hardware_sync)
+        hardware_sync
+        hardware_pio)
 
 # Add the standard include files to the build
 target_include_directories(pomodoro PRIVATE

@@ -2,6 +2,8 @@
 #include "screen_handler.h"
 #include "led_handler.h"
 #include "timer_handler.h"
+#include "led_matrix_handler.h"
+#include "memory_handler.h"
 
 const uint BUTTON_A = 5;
 const uint BUTTON_B = 6;
@@ -19,7 +21,10 @@ void buttons_callback(uint gpio, uint32_t events) {
             if (estado == 0) change_screen_state(1);
             else if (estado == 1) change_screen_state(0);
             else if (estado == 2) change_screen_state(0);
-            else if (estado == 3) change_screen_state(0);
+            else if (estado == 3) {
+                store_values(foco, descanso, ciclos);
+                change_screen_state(0);
+            }
             else if (estado == 4) change_screen_state(3);
             else if (estado == 5) change_screen_state(4);
         }
@@ -30,11 +35,13 @@ void buttons_callback(uint gpio, uint32_t events) {
             else if (estado == 1) {
                 //printf("B\n");
                 if (cancelled) {
-                    turn_blue();
+                    //turn_blue();
+                    update_led_matrix(false);
                     setup_repeating_timer();
                 }
                 else {
-                    turn_red();
+                    //turn_red();
+                    update_led_matrix(true);
                     cancel_timer();
                 }
                 
@@ -42,17 +49,22 @@ void buttons_callback(uint gpio, uint32_t events) {
             else if (estado == 2) {
                 //printf("B\n");
                 if (cancelled) {
-                    turn_green();
+                    //turn_green();
+                    update_led_matrix(false);
                     setup_repeating_timer();
                 }
                 else {
-                    turn_red();
+                    //turn_red();
+                    update_led_matrix(true);
                     cancel_timer();
                 }
             }
             else if (estado == 3) change_screen_state(4);
             else if (estado == 4) change_screen_state(5);
-            else if (estado == 5) change_screen_state(0);
+            else if (estado == 5) {
+                store_values(foco, descanso, ciclos);
+                change_screen_state(0);
+            }
         }
     }
 }

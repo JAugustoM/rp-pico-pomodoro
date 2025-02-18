@@ -5,7 +5,7 @@
 #include "screen_handler.h"
 #include "led_handler.h"
 #include "timer_handler.h"
-#include "memory_handler.h"
+#include "led_matrix_handler.h"
 
 const uint I2C_SDA = 14;
 const uint I2C_SCL = 15;
@@ -14,7 +14,6 @@ volatile uint8_t estado = 0;
 volatile uint8_t foco = 25;
 volatile uint8_t descanso = 5;
 volatile uint8_t ciclos = 3;
-bool inicializado = true;
 
 struct render_area frame_area = {
     start_column : 0,
@@ -59,13 +58,8 @@ void get_screen_text() {
         if (!cancelled) {
             cancel_timer();
         }
-        if (inicializado) {
-            inicializado = false;
-        } else {
-            store_values(foco, descanso, ciclos);
-        }
-
-        turn_off();
+        update_led_matrix(false);
+        //turn_off();
 
         ciclos_restante = ciclos;
         char text[8][17] = {
@@ -90,7 +84,7 @@ void get_screen_text() {
             cancel_timer();
         } 
 
-        turn_blue();
+        //turn_blue();
 
         if (ciclos_restante > 0) ciclos_restante--;
         else {
@@ -99,6 +93,8 @@ void get_screen_text() {
             return;
         }
         tempo_foco = foco;
+        update_led_matrix(false);
+
         char text[8][17] = {
             "Foco            ",
             "                ",
@@ -122,9 +118,11 @@ void get_screen_text() {
             cancel_timer();
         } 
 
-        turn_green();
+        //turn_green();
 
         tempo_descanso = descanso;
+        update_led_matrix(false);
+
         char text[8][17] = {
             "Descanso        ",
             "                ",

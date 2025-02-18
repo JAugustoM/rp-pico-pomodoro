@@ -4,6 +4,7 @@
 #include "timer_handler.h"
 #include "screen_handler.h"
 #include "buzzer_handler.h"
+#include "led_matrix_handler.h"
 
 struct repeating_timer timer;
 volatile bool cancelled = true;
@@ -16,6 +17,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
     if (estado == 1) {
         if (tempo_foco > 0) {
             tempo_foco--;
+            
             char text[8][17];
 
             for (int i = 0; i < 8; i++) {
@@ -25,6 +27,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
             snprintf(text[3], 17, "  % 2u minutos    ", tempo_foco);
 
             draw_screen(text);
+            update_led_matrix(false);
             
             //printf("Tempo restante %u\n", tempo_foco);
             return true;
@@ -36,7 +39,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
     } else if (estado == 2) {
         if (tempo_descanso > 0) {
             tempo_descanso--;
-
+            
             char text[8][17];
 
             for (int i = 0; i < 8; i++) {
@@ -46,6 +49,7 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
             snprintf(text[3], 17, "  % 2u minutos    ", tempo_descanso);
 
             draw_screen(text);
+            update_led_matrix(false);
 
             //printf("Tempo restante %u\n", tempo_descanso);
             return true;
