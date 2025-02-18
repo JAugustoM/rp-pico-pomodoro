@@ -59,7 +59,6 @@ void get_screen_text() {
             cancel_timer();
         }
         update_led_matrix(false);
-        //turn_off();
 
         ciclos_restante = ciclos;
         char text[8][17] = {
@@ -85,11 +84,8 @@ void get_screen_text() {
             cancel_timer();
         } 
 
-        //turn_blue();
-
         if (ciclos_restante > 0) ciclos_restante--;
         else {
-            //printf("Reset\n");
             change_screen_state(0);
             return;
         }
@@ -120,8 +116,6 @@ void get_screen_text() {
             cancel_timer();
         } 
 
-        //turn_green();
-
         tempo_descanso = descanso * 60;
         update_led_matrix(false);
 
@@ -145,11 +139,9 @@ void get_screen_text() {
         setup_repeating_timer();
     } else if (estado == 3) {
         if (!cancelled) {
-            //printf("Joystick\n");
             cancel_timer();
             setup_repeating_timer_joystick();
         } else {
-            //printf("Joystick\n");
             setup_repeating_timer_joystick();
         }
         
@@ -172,11 +164,9 @@ void get_screen_text() {
         }
     } else if (estado == 4) {
         if (!cancelled) {
-            //printf("Joystick\n");
             cancel_timer();
             setup_repeating_timer_joystick();
         } else {
-            //printf("Joystick\n");
             setup_repeating_timer_joystick();
         }
 
@@ -199,11 +189,9 @@ void get_screen_text() {
         }
     } else if (estado == 5) {
         if (!cancelled) {
-            //printf("Joystick\n");
             cancel_timer();
             setup_repeating_timer_joystick();
         } else {
-            //printf("Joystick\n");
             setup_repeating_timer_joystick();
         }
 

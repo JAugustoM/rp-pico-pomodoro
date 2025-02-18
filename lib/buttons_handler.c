@@ -33,28 +33,22 @@ void buttons_callback(uint gpio, uint32_t events) {
             last_press_time_b = get_absolute_time();
             if (estado == 0) change_screen_state(3);
             else if (estado == 1) {
-                //printf("B\n");
                 if (cancelled) {
-                    //turn_blue();
                     update_led_matrix(false);
                     setup_repeating_timer();
                 }
                 else {
-                    //turn_red();
                     update_led_matrix(true);
                     cancel_timer();
                 }
                 
             }
             else if (estado == 2) {
-                //printf("B\n");
                 if (cancelled) {
-                    //turn_green();
                     update_led_matrix(false);
                     setup_repeating_timer();
                 }
                 else {
-                    //turn_red();
                     update_led_matrix(true);
                     cancel_timer();
                 }

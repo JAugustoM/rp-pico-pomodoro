@@ -25,7 +25,7 @@ void npInit(uint pin) {
     sm = pio_claim_unused_sm(np_pio, false);
     if (sm < 0) {
         np_pio = pio1;
-        sm = pio_claim_unused_sm(np_pio, true); // Se nenhuma máquina estiver livre, panic!
+        sm = pio_claim_unused_sm(np_pio, true);
     }
 
     ws2818b_program_init(np_pio, sm, offset, pin, 800000.f);
@@ -82,8 +82,6 @@ void setup_led_matrix() {
 void update_led_matrix(bool pause) {
     npClear();
     count_leds();
-
-    // printf("LEDS %u\n", ACTIVE_LEDS);
 
     for (int i = 0; i < ACTIVE_LEDS; i++) {
         if (pause) {

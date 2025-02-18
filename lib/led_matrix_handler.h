@@ -6,7 +6,7 @@ struct pixel_t {
 };
 
 typedef struct pixel_t pixel_t;
-typedef pixel_t npLED_t; // Mudança de nome de "struct pixel_t" para "npLED_t", por clareza.
+typedef pixel_t npLED_t;
 
 extern void setup_led_matrix();
 extern void update_led_matrix(bool pause);
