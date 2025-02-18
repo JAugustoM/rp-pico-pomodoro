@@ -19,7 +19,11 @@ int main()
 
     change_screen_state(estado);
 
-    while (true) {}
+    while (true) {
+        // Todo o código funciona de forma assincrona
+        // baseado em interrupts e timers, logo o laço
+        // while serve apenas para que o código não termine
+    }
 
     return 0;
 }

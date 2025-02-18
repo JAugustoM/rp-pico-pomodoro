@@ -85,8 +85,6 @@ void update_led_matrix(bool pause) {
 
     // printf("LEDS %u\n", ACTIVE_LEDS);
 
-    npLED_t led;
-
     for (int i = 0; i < ACTIVE_LEDS; i++) {
         if (pause) {
             leds[i].R = 40;

@@ -75,7 +75,8 @@ void get_screen_text() {
         snprintf(text[7], 17, "  Ciclos    % 2u  ", ciclos);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
 
         ciclos_restante = ciclos;
@@ -109,7 +110,8 @@ void get_screen_text() {
         snprintf(text[3], 17, "  % 2u minutos    ", foco);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
 
         setup_repeating_timer();
@@ -137,7 +139,8 @@ void get_screen_text() {
         snprintf(text[3], 17, "  % 2u minutos    ", descanso);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
         setup_repeating_timer();
     } else if (estado == 3) {
@@ -161,10 +164,11 @@ void get_screen_text() {
             "                ",
         };
 
-        snprintf(text[3], 17, "  % 2u minutos    ", foco);
+        snprintf(text[3], 17, "% 2u minutos      ", foco);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
     } else if (estado == 4) {
         if (!cancelled) {
@@ -187,10 +191,11 @@ void get_screen_text() {
             "                ",
         };
 
-        snprintf(text[3], 17, "  % 2u minutos    ", descanso);
+        snprintf(text[3], 17, "% 2u minutos      ", descanso);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
     } else if (estado == 5) {
         if (!cancelled) {
@@ -213,10 +218,11 @@ void get_screen_text() {
             "                ",
         };
 
-        snprintf(text[3], 17, "  % 2u ciclos     ", ciclos);
+        snprintf(text[3], 17, "% 2u ciclos       ", ciclos);
 
         for (int i = 0; i < 8; i++) {
-            strcpy(texto[i], text[i]);
+            if (sizeof(texto[i]) == sizeof(text[i]))
+                strcpy(texto[i], text[i]);
         }
     }
 }
