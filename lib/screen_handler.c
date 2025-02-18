@@ -92,7 +92,7 @@ void get_screen_text() {
             change_screen_state(0);
             return;
         }
-        tempo_foco = foco;
+        tempo_foco = foco * 60;
         update_led_matrix(false);
 
         char text[8][17] = {
@@ -120,7 +120,7 @@ void get_screen_text() {
 
         //turn_green();
 
-        tempo_descanso = descanso;
+        tempo_descanso = descanso * 60;
         update_led_matrix(false);
 
         char text[8][17] = {

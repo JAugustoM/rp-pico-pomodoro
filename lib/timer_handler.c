@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include "hardware/adc.h"
@@ -24,12 +25,12 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
                 strcpy(text[i], texto[i]);
             }
 
-            snprintf(text[3], 17, "  % 2u minutos    ", tempo_foco);
+            snprintf(text[3], 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_foco / 60.0));
 
             draw_screen(text);
             update_led_matrix(false);
             
-            //printf("Tempo restante %u\n", tempo_foco);
+            // printf("Tempo restante %u\n", tempo_foco);
             return true;
         } else {
             change_screen_state(2);
@@ -46,12 +47,12 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
                 strcpy(text[i], texto[i]);
             }
 
-            snprintf(text[3], 17, "  % 2u minutos    ", tempo_descanso);
+            snprintf(text[3], 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_descanso / 60.0));
 
             draw_screen(text);
             update_led_matrix(false);
 
-            //printf("Tempo restante %u\n", tempo_descanso);
+            // printf("Tempo restante %u\n", tempo_descanso);
             return true;
         } else {
             change_screen_state(1);

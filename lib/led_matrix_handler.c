@@ -60,10 +60,10 @@ void count_leds() {
     double total;
     double remaining;
     if (estado == 1) {
-        total = foco;
+        total = foco * 60;
         remaining = tempo_foco;
     } else if (estado == 2) {
-        total = descanso;
+        total = descanso * 60;
         remaining = tempo_descanso;
     } else {
         total = 1;
@@ -83,7 +83,7 @@ void update_led_matrix(bool pause) {
     npClear();
     count_leds();
 
-    printf("LEDS %u\n", ACTIVE_LEDS);
+    // printf("LEDS %u\n", ACTIVE_LEDS);
 
     npLED_t led;
 
