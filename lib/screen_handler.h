@@ -17,6 +17,7 @@ extern volatile uint16_t ciclos_restante;
 
 extern void setup_display_oled();
 extern void draw_screen(char text[8][17]);
+extern void update_line(char text[17], int line);
 extern void get_screen_text();
 extern void change_screen_state(uint state);
 

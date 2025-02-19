@@ -53,6 +53,12 @@ void draw_screen(char text[8][17]) {
     render_on_display(ssd, &frame_area);
 }
 
+void update_line(char text[17], int line) {
+    int y = 8 * line;
+    ssd1306_draw_string(ssd, 5, y, text);
+    render_on_display(ssd, &frame_area);
+}
+
 void get_screen_text() {
     if (estado == 0) {
         if (!cancelled) {

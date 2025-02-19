@@ -19,15 +19,11 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
         if (tempo_foco > 0) {
             tempo_foco--;
             
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
+            snprintf(text, 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_foco / 60.0));
+            update_line(text, 3);
 
-            snprintf(text[3], 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_foco / 60.0));
-
-            draw_screen(text);
             update_led_matrix(false);
             
             return true;
@@ -40,15 +36,11 @@ bool repeating_timer_callback(__unused struct repeating_timer *t) {
         if (tempo_descanso > 0) {
             tempo_descanso--;
             
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
+            snprintf(text, 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_descanso / 60.0));
+            update_line(text, 3);
 
-            snprintf(text[3], 17, "  % 2u minutos    ", (uint8_t) ceil(tempo_descanso / 60.0));
-
-            draw_screen(text);
             update_led_matrix(false);
 
             return true;
@@ -66,81 +58,51 @@ bool repeating_timer_callback_joystick(__unused struct repeating_timer *t) {
     if (estado == 3) {
         if (joystick > 4000 && foco < 60) {
             foco++;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u minutos      ", foco);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u minutos      ", foco);
+            update_line(text, 3);
         }
         else if (joystick < 25 && foco > 1) {
             foco--;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u minutos      ", foco);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u minutos      ", foco);
+            update_line(text, 3);
         }
     }
     
     if (estado == 4) {
         if (joystick > 4000 && descanso < 60) {
             descanso++;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u minutos      ", descanso);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u minutos      ", descanso);
+            update_line(text, 3);
         }
         else if (joystick < 25 && descanso > 1) {
             descanso--;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u minutos      ", descanso);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u minutos      ", descanso);
+            update_line(text, 3);
         }
     }
 
     if (estado == 5) {
         if (joystick > 4000) {
             ciclos++;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u ciclos       ", ciclos);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u ciclos       ", ciclos);
+            update_line(text, 3);
         }
         else if (joystick < 25 && ciclos > 1) {
             ciclos--;
-            char text[8][17];
+            char text[17];
 
-            for (int i = 0; i < 8; i++) {
-                strcpy(text[i], texto[i]);
-            }
-
-            snprintf(text[3], 17, "% 2u ciclos       ", ciclos);
-
-            draw_screen(text);
+            snprintf(text, 17, "% 2u ciclos       ", ciclos);
+            update_line(text, 3);
         }
     }
 
