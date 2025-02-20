@@ -41,8 +41,9 @@ void store_values(uint8_t foco_valor, uint8_t descanso_valor, uint8_t ciclos_val
 
     restore_interrupts(ints);
 
-    printf("%u\n", base_adress[0]);
-    printf("%u\n", base_adress[1]);
-    printf("%u\n", base_adress[2]);
-    printf("%u\n", base_adress[3]);
+    printf("%x\n", base_adress);
+    printf("%x\n", base_adress + 8);
+    printf("%x\n", base_adress + 16);
+    printf("%x\n", base_adress + 24);
+
 }

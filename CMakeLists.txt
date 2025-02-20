@@ -75,3 +75,5 @@ target_include_directories(pomodoro PRIVATE
 
 pico_add_extra_outputs(pomodoro)
 
+set_target_properties(pomodoro PROPERTIES PICO_TARGET_LINKER_SCRIPT 
+    ${CMAKE_SOURCE_DIR}/memmap_custom.ld)
