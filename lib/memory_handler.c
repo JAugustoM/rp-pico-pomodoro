@@ -22,6 +22,11 @@ void initialize_memory() {
         printf("%u\n", base_adress[3]);
     } else {
         uint32_t ints = save_and_disable_interrupts();
+        
+        foco = 25;
+        descanso = 10;
+        ciclos = 3;
+
         flash_range_erase((PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE), FLASH_SECTOR_SIZE);
         restore_interrupts (ints);
     }
