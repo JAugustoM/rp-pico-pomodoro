@@ -116,7 +116,7 @@ void setup_repeating_timer_joystick() {
 
 void setup_repeating_timer() {
     cancelled = false; 
-    add_repeating_timer_ms(1000, repeating_timer_callback, NULL, &timer);
+    add_repeating_timer_ms(975, repeating_timer_callback, NULL, &timer);
 }
 
 void cancel_timer() {
